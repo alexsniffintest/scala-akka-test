@@ -4,7 +4,6 @@ import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
 
 import scala.concurrent.ExecutionContextExecutor
-import scala.io.StdIn
 
 object ScalaAkkaApi extends App {
 
@@ -23,12 +22,9 @@ object ScalaAkkaApi extends App {
       }
     }
 
-  val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
+  val port = sys.env("PORT").toInt
+  val bindingFuture = Http().bindAndHandle(route, "0.0.0.0", port)
 
-  println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
-  StdIn.readLine()
-  bindingFuture
-    .flatMap(_.unbind())
-    .onComplete(_ => system.terminate())
+  println(s"Server online at http://localhost:$port/\nPress RETURN to stop...")
 
 }
